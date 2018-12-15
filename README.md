@@ -15,9 +15,15 @@ Setup
 5. `sudo systemctl restart docker`
 6. `sudo chmod 666 /var/run/docker.sock`
 7. `docker-compose build`
-8. `docker-compose run web python manage.py createsuperuser`
+8. `docker-compose run web python manage.py migrate`
+9. `docker-compose run web python manage.py createsuperuser`
 
 Run
 ---
 
 - `docker-compose up`
+
+Make Migrations
+---------------
+
+- `docker-compose run web python manage.py makemigrations`
