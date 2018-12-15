@@ -17,7 +17,7 @@ RUN apt-get update
 RUN apt-get -y install -qq cron
 
 # Setup cron job
-RUN (echo "* * * * * python manage.py update_conversations > /proc/1/fd/1 2> /proc/1/fd/2") | crontab
+RUN (echo "* * * * * python /code/manage.py update_conversations > /proc/1/fd/1 2> /proc/1/fd/2") | crontab
 
 # Run the command on container startup
 CMD ["cron", "-f"]
