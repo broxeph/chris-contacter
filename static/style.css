@@ -1,0 +1,18 @@
+.responded {
+    text-decoration: line-through;
+}
+.unsent {
+    color: gray;
+}
+.chat {
+    color: darkgreen;
+}
+.email {
+    color: gold;
+}
+.text {
+    color: darkorange;
+}
+.call {
+    color: darkred;
+}

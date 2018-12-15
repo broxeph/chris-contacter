@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Message</th>
+        <th>Priority</th>
+        <th>Status</th>
+        <th>Sent</th>
+        <th>Responded</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for conversation in conversation_list %}
+        <tr class="{{ conversation.get_status_display|lower }}{% if conversation.responded %} responded{% endif %}">
+          <td>{{ conversation.message }}</td>
+          <td>{{ conversation.get_priority_display }}</td>
+          <td>{{ conversation.get_status_display }}</td>
+          <td>{{ conversation.sent|default:"" }}</td>
+          <td>{{ conversation.responded|default:"" }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
