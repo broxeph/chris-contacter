@@ -20,3 +20,9 @@ class ConversationCreateView(CreateView):
 
 class ConversationListView(ListView):
     model = Conversation
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['priority_help_text'] = self.model._meta.get_field('priority').help_text
+        context['status_help_text'] = self.model._meta.get_field('status').help_text
+        return context

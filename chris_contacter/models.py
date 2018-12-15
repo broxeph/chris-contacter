@@ -17,8 +17,11 @@ class Conversation(models.Model):
     sent = models.DateTimeField(blank=True, null=True)
     responded = models.DateTimeField(blank=True, null=True)
 
+    class Meta:
+        ordering = ('-sent',)
+
     def __str__(self):
-        return f'{self.get_priority_display()}: {self.message[:50]}'
+        return f'{self.get_status_display()}: {self.message[:50]}'
 
 
 admin.site.register(Conversation)

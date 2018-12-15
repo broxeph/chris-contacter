@@ -34,11 +34,6 @@ Run
 
 - `docker-compose up`
 
-Make Migrations
----------------
-
-- `docker-compose run web python manage.py makemigrations`
-
 TODO
 ----
 
