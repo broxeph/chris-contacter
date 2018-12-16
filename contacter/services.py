@@ -16,7 +16,7 @@ def check_responses(since):
 
     """
     logger.info(f'Checking for responses since {since}...')
-    for service in SERVICES:
+    for service in SERVICES.values():
         response_time = service.check(since)
         if response_time:
             return response_time
@@ -26,10 +26,10 @@ def check_responses(since):
 
 def send_message(message_type, message):
     """
-    Look up message service and send message.
+    Send message using appropriate service.
     """
     logger.info(f'Sending message using {message_type}...')
-    SERVICES[message_type](message)
+    SERVICES[message_type].send(message)
     logger.info('Message sent.')
 
 
@@ -47,7 +47,7 @@ class Chat:
 class Email:
     @staticmethod
     def check(since):
-        raise NotImplementedError('Email checking not yet implemented. Message not sent.')
+        logger.warning('Email checking not yet implemented.')
 
     @staticmethod
     def send(message):
@@ -57,7 +57,7 @@ class Email:
 class Text:
     @staticmethod
     def check(since):
-        raise NotImplementedError('Text checking not yet implemented. Message not sent.')
+        logger.warning('Text checking not yet implemented.')
 
     @staticmethod
     def send(message):
@@ -67,7 +67,7 @@ class Text:
 class Call:
     @staticmethod
     def check(since):
-        raise NotImplementedError('Call checking not yet implemented. Message not sent.')
+        logger.warning('Call checking not yet implemented.')
 
     @staticmethod
     def send(message):
