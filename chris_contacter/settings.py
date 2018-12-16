@@ -156,7 +156,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
     'contacter': {
-        'task': 'contacter.tasks.send_messages',
+        'task': 'contacter.tasks.update_messages',
         'schedule': crontab()  # execute every minute
     }
 }

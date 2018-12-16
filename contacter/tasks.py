@@ -8,26 +8,40 @@ from django.db.transaction import atomic
 from django.utils import timezone
 
 from .models import Conversation, PRIORITY_CHOICES
-from .services import send_message as _send_message
+from .services import send_message as _send_message, check_responses
 
 logger = logging.getLogger(__name__)
 
 
 @shared_task
-def send_messages():
+def update_messages():
     """
     Send messages for any conversations which haven't been responded to for a while.
     """
     # Stale conversations are any which haven't been responded to, haven't reached their max priority,
     # and haven't been updated for [an hour].
     stale_time_threshold = timezone.now() - timedelta(minutes=settings.MESSAGE_INTERVAL)
-    stale_conversation_ids = Conversation.objects.filter(
+    stale_conversations = Conversation.objects.filter(
         Q(sent=None) | Q(sent__lt=stale_time_threshold),
         responded=None,
         status__lt=F('priority')
-    ).values_list('id', flat=True)
+    )
 
-    for conversation_id in stale_conversation_ids:
+    if not stale_conversations:
+        logger.info('No messages to send.')
+        return
+
+    # Check whether any media have received a response.
+    last_message_sent = stale_conversations.latest('sent')
+    response_time = check_responses(since=last_message_sent)
+    if response_time:
+        # Update all stale conversations with response time.
+        logger.info('Response received!')
+        stale_conversations.update(responded=response_time)
+        return
+
+    # Start sub-task for each stale conversation.
+    for conversation_id in stale_conversations.values_list('id', flat=True):
         send_message.delay(conversation_id)
 
 
@@ -48,7 +62,7 @@ def send_message(conversation_id):
         else:
             raise Exception(f'Next status not found: {conversation.status}')
 
-        logger.info(f'New status: {new_status}')
+        logger.debug(f'New status: {new_status}')
 
         # Send message using appropriate service
         _send_message(new_status[1], conversation.message)

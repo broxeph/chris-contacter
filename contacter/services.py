@@ -5,33 +5,78 @@ from .models import CHAT, EMAIL, TEXT, CALL
 logger = logging.getLogger(__name__)
 
 
+def check_responses(since):
+    """
+    Look for replies across all services.
+
+    Args:
+        since: Timestamp after which to check messages.
+    Returns:
+        datetime response received, or None.
+
+    """
+    logger.info(f'Checking for responses since {since}...')
+    for service in SERVICES:
+        response_time = service.check(since)
+        if response_time:
+            return response_time
+    else:
+        return None
+
+
 def send_message(message_type, message):
     """
     Look up message service and send message.
     """
     logger.info(f'Sending message using {message_type}...')
     SERVICES[message_type](message)
+    logger.info('Message sent.')
 
 
-def send_chat(message):
-    logger.info(f'Sending chat: {message}')
+class Chat:
+    @staticmethod
+    def check(since):
+        logger.debug(f'Checking chats since {since}...')
+        return None
+
+    @staticmethod
+    def send(message):
+        logger.info(f'Sending chat: {message}')
 
 
-def send_email(message):
-    raise NotImplementedError
+class Email:
+    @staticmethod
+    def check(since):
+        raise NotImplementedError('Email checking not yet implemented. Message not sent.')
+
+    @staticmethod
+    def send(message):
+        raise NotImplementedError('Email sending not yet implemented. Message not sent.')
 
 
-def send_text(message):
-    raise NotImplementedError
+class Text:
+    @staticmethod
+    def check(since):
+        raise NotImplementedError('Text checking not yet implemented. Message not sent.')
+
+    @staticmethod
+    def send(message):
+        raise NotImplementedError('Text sending not yet implemented. Message not sent.')
 
 
-def send_call(message):
-    raise NotImplementedError
+class Call:
+    @staticmethod
+    def check(since):
+        raise NotImplementedError('Call checking not yet implemented. Message not sent.')
+
+    @staticmethod
+    def send(message):
+        raise NotImplementedError('Call sending not yet implemented. Message not sent.')
 
 
 SERVICES = {
-    CHAT: send_chat,
-    EMAIL: send_email,
-    TEXT: send_text,
-    CALL: send_call,
+    CHAT: Chat,
+    EMAIL: Email,
+    TEXT: Text,
+    CALL: Call,
 }
