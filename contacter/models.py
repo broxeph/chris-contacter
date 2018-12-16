@@ -17,8 +17,8 @@ PRIORITY_CHOICES = (
 
 class Conversation(models.Model):
     message = models.TextField()
-    priority = models.PositiveIntegerField(choices=PRIORITY_CHOICES, help_text='Highest medium to try')
-    status = models.PositiveIntegerField(choices=PRIORITY_CHOICES, default=0, help_text='Highest medium tried')
+    priority = models.PositiveIntegerField(choices=PRIORITY_CHOICES, help_text='Highest service to try')
+    status = models.PositiveIntegerField(choices=PRIORITY_CHOICES, default=0, help_text='Highest service tried')
     sent = models.DateTimeField(blank=True, null=True)
     responded = models.DateTimeField(blank=True, null=True)
 

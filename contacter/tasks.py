@@ -27,17 +27,17 @@ def update_messages():
         status__lt=F('priority')
     )
 
-    if not stale_conversations:
+    if not stale_conversations.exists():
         logger.info('No messages to send.')
         return
 
-    # Check whether any media have received a response.
+    # Check whether any services have received a response.
     last_message_sent = stale_conversations.latest('sent')
     response_time = check_responses(since=last_message_sent)
     if response_time:
-        # Update all stale conversations with response time.
+        # Update all un-responded conversations with response time.
         logger.info('Response received!')
-        stale_conversations.update(responded=response_time)
+        Conversation.objects.filter(responded=None).update(responded=response_time)
         return
 
     # Start sub-task for each stale conversation.

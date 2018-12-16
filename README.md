@@ -4,7 +4,7 @@ Chris Contacter
 For those times when manually sending Hangouts chats, emails and texts simply gets too tedious...
 
 Chris Contacter will attempt to send a message via Hangouts chat, then email, then text, then phone call.
-It will wait an hour between each medium, and stop when it receives a response.
+It will wait an hour between each service, and stop when it receives a response.
 
 This is meant to be run locally, and is not production-ready; hence unforgivable things like running Celery with `DEBUG = True`.
 
