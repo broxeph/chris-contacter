@@ -1,14 +1,18 @@
 from django.contrib import admin
 from django.db import models
 
+UNSENT = 'Unsent'
+CHAT = 'Chat'
+EMAIL = 'Email'
+TEXT = 'Text'
+CALL = 'Call'
 PRIORITY_CHOICES = (
-    (0, 'Unsent'),
-    (10, 'Chat'),
-    (20, 'Email'),
-    (30, 'Text'),
-    (40, 'Call'),
+    (0, UNSENT),
+    (10, CHAT),
+    (20, EMAIL),
+    (30, TEXT),
+    (40, CALL),
 )
-PRIORITIES = (priority[0] for priority in PRIORITY_CHOICES)
 
 
 class Conversation(models.Model):

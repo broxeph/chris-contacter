@@ -6,7 +6,8 @@ from django.db.models import F, Q
 from django.db.transaction import atomic
 from django.utils import timezone
 
-from .models import Conversation
+from .models import Conversation, PRIORITY_CHOICES
+from .services import send_message as _send_message
 
 
 @shared_task
@@ -33,4 +34,22 @@ def send_message(conversation_id):
         conversation = Conversation.objects.get(id=conversation_id)
         print(f'Updating: {conversation}')
 
+        # Get next status
+        match_found = False
+        for priority_choice in PRIORITY_CHOICES:
+            if match_found:
+                new_status = priority_choice
+                break
+            if priority_choice[0] == conversation.status:
+                match_found = True
+        else:
+            raise Exception(f'Next status not found: {conversation.status}')
 
+        print(f'New status: {new_status}')
+
+        # Send message using appropriate service
+        _send_message(new_status[1], conversation.message)
+
+        # Update conversation status
+        conversation.status = new_status[0]
+        conversation.save()

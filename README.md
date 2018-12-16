@@ -40,7 +40,8 @@ Run
 TODO
 ----
 
-- Create minutely cronjob to transition statuses every hour
+- Write tests
+- Admin list_display
 - Connect chat API
 - Connect email API
 - Connect text API
