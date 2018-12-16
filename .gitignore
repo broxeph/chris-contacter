@@ -1,1 +1,6 @@
+# PyCharm
 .idea/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid

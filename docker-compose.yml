@@ -3,10 +3,10 @@ version: '3.3'
 services:
   db:
     image: postgres
+  redis:
+    image: "redis:alpine"
   web:
-    build:
-      context: .
-      dockerfile: ./docker/web/Dockerfile
+    build: .
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
@@ -14,3 +14,19 @@ services:
       - "8000:8000"
     depends_on:
       - db
+  celery:
+    build: .
+    command: celery -A chris_contacter worker -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - redis
+  celery-beat:
+    build: .
+    command: celery -A chris_contacter beat -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - redis
