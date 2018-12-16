@@ -137,7 +137,9 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
     'contacter': {
-        'task': 'contacter.tasks.hello',
+        'task': 'contacter.tasks.send_messages',
         'schedule': crontab()  # execute every minute
     }
 }
+
+MESSAGE_INTERVAL = 60  # Minutes to wait between sending messages
