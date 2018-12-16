@@ -1,16 +1,20 @@
+import logging
+
 from .models import CHAT, EMAIL, TEXT, CALL
+
+logger = logging.getLogger(__name__)
 
 
 def send_message(message_type, message):
     """
     Look up message service and send message.
     """
-    print(f'Sending message using {message_type}...')
+    logger.info(f'Sending message using {message_type}...')
     SERVICES[message_type](message)
 
 
 def send_chat(message):
-    print(f'Sending chat: {message}')
+    logger.info(f'Sending chat: {message}')
 
 
 def send_email(message):

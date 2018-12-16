@@ -1,3 +1,4 @@
+import logging
 from datetime import timedelta
 
 from celery import shared_task
@@ -8,6 +9,8 @@ from django.utils import timezone
 
 from .models import Conversation, PRIORITY_CHOICES
 from .services import send_message as _send_message
+
+logger = logging.getLogger(__name__)
 
 
 @shared_task
@@ -32,7 +35,7 @@ def send_messages():
 def send_message(conversation_id):
     with atomic():
         conversation = Conversation.objects.get(id=conversation_id)
-        print(f'Updating: {conversation}')
+        logger.info(f'Updating: {conversation}')
 
         # Get next status
         match_found = False
@@ -45,11 +48,12 @@ def send_message(conversation_id):
         else:
             raise Exception(f'Next status not found: {conversation.status}')
 
-        print(f'New status: {new_status}')
+        logger.info(f'New status: {new_status}')
 
         # Send message using appropriate service
         _send_message(new_status[1], conversation.message)
 
-        # Update conversation status
+        # Update conversation status and sent timestamp
         conversation.status = new_status[0]
+        conversation.sent = timezone.now()
         conversation.save()

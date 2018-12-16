@@ -27,6 +27,3 @@ class Conversation(models.Model):
 
     def __str__(self):
         return f'{self.get_status_display()}: {self.message[:50]}'
-
-
-admin.site.register(Conversation)

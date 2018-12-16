@@ -41,7 +41,6 @@ TODO
 ----
 
 - Write tests
-- Admin list_display
 - Connect chat API
 - Connect email API
 - Connect text API
