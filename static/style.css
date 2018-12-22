@@ -4,15 +4,9 @@
 .unsent {
     color: gray;
 }
-.chat {
-    color: darkgreen;
-}
 .email {
-    color: gold;
+    color: darkgreen;
 }
 .text {
     color: darkorange;
-}
-.call {
-    color: darkred;
 }

@@ -7,10 +7,9 @@ TEXT = 'Text'
 CALL = 'Call'
 PRIORITY_CHOICES = (
     (0, UNSENT),
-    (10, CHAT),
+    # (10, CHAT),  # NYI due to insufficient Hangouts support for unsolicited messages
     (20, EMAIL),
     (30, TEXT),
-    (40, CALL),
 )
 
 

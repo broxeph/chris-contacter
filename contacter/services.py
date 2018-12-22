@@ -1,6 +1,6 @@
 import logging
 
-from .models import CHAT, EMAIL, TEXT, CALL
+from .models import EMAIL, TEXT
 
 logger = logging.getLogger(__name__)
 
@@ -41,17 +41,6 @@ def send_message(message_type, message):
     logger.info('Message sent.')
 
 
-class Chat:
-    @staticmethod
-    def check(since):
-        logger.debug(f'Checking chats since {since}...')
-        return None
-
-    @staticmethod
-    def send(message):
-        logger.info(f'Sending chat: {message}')
-
-
 class Email:
     @staticmethod
     def check(since):
@@ -65,26 +54,14 @@ class Email:
 class Text:
     @staticmethod
     def check(since):
-        logger.warning('Text checking not yet implemented.')
+        logger.warning('Text checking not yet implemented.')  # TODO: Publish app on Heroku and register Twilio webhook?
 
     @staticmethod
     def send(message):
         raise NotImplementedError('Text sending not yet implemented. Message not sent.')
 
 
-class Call:
-    @staticmethod
-    def check(since):
-        logger.warning('Call checking not yet implemented.')
-
-    @staticmethod
-    def send(message):
-        raise NotImplementedError('Call sending not yet implemented. Message not sent.')
-
-
 SERVICES = {
-    CHAT: Chat,
     EMAIL: Email,
     TEXT: Text,
-    CALL: Call,
 }

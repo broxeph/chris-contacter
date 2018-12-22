@@ -14,6 +14,8 @@ import os
 
 from celery.schedules import crontab
 
+from .secrets import MY_EMAIL_PASSWORD  # TODO: Use docker-swarm secrets, or something
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -161,4 +163,9 @@ CELERY_BEAT_SCHEDULE = {
     }
 }
 
+
+# Contact
+
 MESSAGE_INTERVAL = 60  # Minutes to wait between sending messages
+CHRIS_EMAIL = 'cspencer@edgeondemand.com'
+MY_EMAIL = 'aball@edgeondemand.com'
