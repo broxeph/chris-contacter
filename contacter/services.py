@@ -27,9 +27,17 @@ def check_responses(since):
 def send_message(message_type, message):
     """
     Send message using appropriate service.
+
+    Args:
+        message_type: Slug used to look up service class
+        message: Message string
+
     """
     logger.info(f'Sending message using {message_type}...')
+
+    # Look up message class and send message.
     SERVICES[message_type].send(message)
+
     logger.info('Message sent.')
 
 
