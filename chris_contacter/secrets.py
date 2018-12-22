@@ -1,1 +1,0 @@
-MY_EMAIL_PASSWORD = 'aoeu'

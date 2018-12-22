@@ -14,18 +14,13 @@ import os
 
 from celery.schedules import crontab
 
-from .secrets import MY_EMAIL_PASSWORD  # TODO: Use docker-swarm secrets, or something
+from .secrets import EMAIL_HOST_PASSWORD  # TODO: Use docker-swarm secrets, or something
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'c%_hqm_c@rzdz23)*ajgl#)_tf7*i!dap5d&w-%2l1l$a_n976'
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# If True, sends emails/texts to self
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -167,5 +162,11 @@ CELERY_BEAT_SCHEDULE = {
 # Contact
 
 MESSAGE_INTERVAL = 60  # Minutes to wait between sending messages
-CHRIS_EMAIL = 'cspencer@edgeondemand.com'
-MY_EMAIL = 'aball@edgeondemand.com'
+
+# Email
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'aball@edgeondemand.com'
+EMAIL_PORT = 587
+CHRIS_EMAIL = EMAIL_HOST_USER if DEBUG else 'cspencer@edgeondemand.com'
+EMAIL_SUBJECT = 'Question'

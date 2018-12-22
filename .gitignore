@@ -4,3 +4,9 @@
 # Celery
 celerybeat-schedule
 celerybeat.pid
+
+# Secrets
+*/secrets.py
+
+# Python
+*.pyc

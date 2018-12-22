@@ -1,4 +1,11 @@
+import imaplib
 import logging
+from datetime import date
+from email import message_from_bytes
+from email.utils import parsedate_to_datetime
+
+from django.conf import settings
+from django.core.mail import EmailMessage
 
 from .models import EMAIL, TEXT
 
@@ -10,7 +17,7 @@ def check_responses(since):
     Look for replies across all services.
 
     Args:
-        since: Timestamp after which to check messages.
+        since: Datetime after which to check messages.
     Returns:
         datetime response received, or None.
 
@@ -44,11 +51,38 @@ def send_message(message_type, message):
 class Email:
     @staticmethod
     def check(since):
-        logger.warning('Email checking not yet implemented.')
+        conn = imaplib.IMAP4_SSL(settings.EMAIL_HOST)
+        conn.login(settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)
+        conn.select('INBOX')
+
+        # Format today as string
+        today_string = date.today().strftime("%d-%b-%Y")
+
+        # Search inbox (IMAP doesn't allow searching by timestamp)
+        result, data = conn.search(None, f'(SENTSINCE {today_string} FROM {settings.CHRIS_EMAIL})')
+
+        if not data:
+            logger.debug('No emails found today.')
+            return None
+
+        # Look for emails since since
+        for email_id in data[0].split():
+            msg_string = conn.fetch(email_id, '(RFC822)')[1][0][1]
+            msg = message_from_bytes(msg_string)
+            response_time = parsedate_to_datetime(msg['Date'])
+            print(response_time)
+            print(since)
+            if response_time > since:
+                return response_time
+        else:
+            logger.debug('No new emails found.')
+            return None
 
     @staticmethod
     def send(message):
-        raise NotImplementedError('Email sending not yet implemented. Message not sent.')
+        email = EmailMessage(settings.EMAIL_SUBJECT, message, to=[settings.CHRIS_EMAIL])
+        email.send()
+        logger.debug(f'Email sent to {settings.CHRIS_EMAIL}.')
 
 
 class Text:

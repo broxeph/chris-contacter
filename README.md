@@ -3,7 +3,7 @@ Chris Contacter
 
 For those times when manually sending Hangouts chats, emails and texts simply gets too tedious...
 
-Chris Contacter will attempt to send a message via email, up to 3 times, then will send a text.
+Chris Contacter will attempt to send a message via email, then will send a text.
 It will wait an hour between each service, and stop when it receives a response.
 
 This is meant to be run locally, and is not production-ready; hence unforgivable things like running Postgres in Docker, and Celery with `DEBUG = True`.
@@ -37,6 +37,11 @@ Run
 ---
 
 - `docker-compose up`
+
+Shell
+-----
+
+- `docker-compose run web python manage.py shell`
 
 TODO
 ----

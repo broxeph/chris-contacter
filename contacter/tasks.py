@@ -3,7 +3,7 @@ from datetime import timedelta
 
 from celery import shared_task
 from django.conf import settings
-from django.db.models import F, Q
+from django.db.models import F, Q, Max
 from django.db.transaction import atomic
 from django.utils import timezone
 
@@ -19,7 +19,7 @@ def update_messages():
     Send messages for any conversations which haven't been responded to for a while.
     """
     # Stale conversations are any which haven't been responded to, haven't reached their max priority,
-    # and haven't been updated for [an hour].
+    # and haven't been updated for MESSAGE_INTERVAL minutes.
     stale_time_threshold = timezone.now() - timedelta(minutes=settings.MESSAGE_INTERVAL)
     stale_conversations = Conversation.objects.filter(
         Q(sent=None) | Q(sent__lt=stale_time_threshold),
@@ -32,17 +32,22 @@ def update_messages():
         return
 
     # Check whether any services have received a response.
-    last_message_sent = stale_conversations.latest('sent')
-    response_time = check_responses(since=last_message_sent)
+    last_message_sent = Conversation.objects.aggregate(Max('sent'))['sent__max']
+    if last_message_sent:
+        response_time = check_responses(since=last_message_sent)
+    else:
+        logger.debug('No messages have been sent.')
+        response_time = None
+
     if response_time:
         # Update all un-responded conversations with response time.
         logger.info('Response received!')
         Conversation.objects.filter(responded=None).update(responded=response_time)
         return
-
-    # Start sub-task for each stale conversation.
-    for conversation_id in stale_conversations.values_list('id', flat=True):
-        send_message.delay(conversation_id)
+    else:
+        # Start sub-task for each stale conversation.
+        for conversation_id in stale_conversations.values_list('id', flat=True):
+            send_message.delay(conversation_id)
 
 
 @shared_task
