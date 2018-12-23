@@ -32,12 +32,12 @@ def update_messages():
         return
 
     # Check whether any services have received a response.
-    last_message_sent = Conversation.objects.aggregate(Max('sent'))['sent__max']
-    if last_message_sent:
-        response_time = check_responses(since=last_message_sent)
-    else:
-        logger.debug('No messages have been sent.')
+    if Conversation.objects.filter(sent=None).exists():
+        logger.debug('One or more messages have not yet been sent. Skipping response check.')
         response_time = None
+    else:
+        last_message_sent = Conversation.objects.aggregate(Max('sent'))['sent__max']
+        response_time = check_responses(since=last_message_sent)
 
     if response_time:
         # Update all un-responded conversations with response time.
