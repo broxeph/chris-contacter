@@ -6,6 +6,7 @@ from email.utils import parsedate_to_datetime
 
 from django.conf import settings
 from django.core.mail import EmailMessage
+from pytz import utc
 
 from .models import EMAIL, TEXT
 
@@ -69,9 +70,8 @@ class Email:
         for email_id in data[0].split():
             msg_string = conn.fetch(email_id, '(RFC822)')[1][0][1]
             msg = message_from_bytes(msg_string)
-            response_time = parsedate_to_datetime(msg['Date'])
-            print(response_time)
-            print(since)
+            response_time_naive = parsedate_to_datetime(msg['Date'])
+            response_time = utc.localize(response_time_naive)
             if response_time > since:
                 return response_time
         else:
