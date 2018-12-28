@@ -40,9 +40,9 @@ def update_messages():
         response_time = check_responses(since=last_message_sent)
 
     if response_time:
-        # Update all un-responded conversations with response time.
+        # Update all sent, un-responded conversations with response time.
         logger.info('Response received!')
-        Conversation.objects.filter(responded=None).update(responded=response_time)
+        Conversation.objects.filter(responded=None).exclude(sent=None).update(responded=response_time)
         return
     else:
         # Start sub-task for each stale conversation.

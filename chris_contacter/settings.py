@@ -14,16 +14,15 @@ import os
 
 from celery.schedules import crontab
 
-from .secrets import EMAIL_HOST_PASSWORD  # TODO: Use docker-swarm secrets, or something
+from .secrets import EMAIL_HOST_PASSWORD, EMAIL_HOST_USER, CHRIS_EMAIL  # TODO: Use docker-swarm secrets, or something
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = 'c%_hqm_c@rzdz23)*ajgl#)_tf7*i!dap5d&w-%2l1l$a_n976'
 
-# If True, sends emails/texts to self
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = []  # Runs locally
 
 
 # Application definition
@@ -163,10 +162,10 @@ CELERY_BEAT_SCHEDULE = {
 
 MESSAGE_INTERVAL = 60  # Minutes to wait between sending messages
 
-# Email
+
+# Email (Gmail by default)
+
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'aball@edgeondemand.com'
 EMAIL_PORT = 587
-CHRIS_EMAIL = EMAIL_HOST_USER if DEBUG else 'cspencer@edgeondemand.com'
 EMAIL_SUBJECT = 'Question'
