@@ -7,6 +7,7 @@ Chris Contacter will attempt to send a message via email, then will send a text.
 It will wait an hour between each service, and stop when it receives a response.
 
 This is meant to be run locally, and is not production-ready; hence unforgivable things like running Postgres in Docker, and Celery with `DEBUG = True`.
+If you ask nicely, Alex will let you use his very special 707-CHRIS-GO Twilio SMS number :)
 
 Stack
 -----
@@ -28,7 +29,8 @@ Setup
 4. `sudo usermod -a -G docker $USER`
 5. `sudo systemctl restart docker`
 6. `sudo chmod 666 /var/run/docker.sock`
-7. Copy `chris_contacter/secrets.py.template` to `chris_contacter/secrets.py` and fill in credentials 
+7. Copy `chris_contacter/secrets.py.template` to `chris_contacter/secrets.py` and fill in credentials
+    - Requires Gmail and Twilio accounts
 8. `docker-compose build`
 9. `docker-compose run web python manage.py migrate --rm`
 10. `docker-compose run web python manage.py createsuperuser --rm`
@@ -46,6 +48,4 @@ Shell
 TODO
 ----
 
-- Write tests
-- Connect email API
-- Connect text API
+- Write tests (lol)
