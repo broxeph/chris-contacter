@@ -14,7 +14,9 @@ import os
 
 from celery.schedules import crontab
 
-from .secrets import EMAIL_HOST_PASSWORD, EMAIL_HOST_USER, CHRIS_EMAIL  # TODO: Use docker-swarm secrets, or something
+# TODO: Use docker-swarm secrets, or something
+from .secrets import EMAIL_HOST_PASSWORD, EMAIL_HOST_USER, CHRIS_EMAIL, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, \
+    TWILIO_PHONE, CHRIS_PHONE, TEXT_SIGNATURE
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

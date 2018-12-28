@@ -6,7 +6,9 @@ from email.utils import parsedate_to_datetime
 
 from django.conf import settings
 from django.core.mail import EmailMessage
+from django.utils.timezone import localtime
 from pytz import utc
+from twilio.rest import Client
 
 from .models import EMAIL, TEXT
 
@@ -23,7 +25,8 @@ def check_responses(since):
         datetime response received, or None.
 
     """
-    logger.info(f'Checking for responses since {since}...')
+    since_str = localtime(since).strftime("%-I:%M:%S %p")
+    logger.info(f'Checking for responses since {since_str}...')
     for service in SERVICES.values():
         response_time = service.check(since)
         if response_time:
@@ -92,7 +95,12 @@ class Text:
 
     @staticmethod
     def send(message):
-        raise NotImplementedError('Text sending not yet implemented. Message not sent.')
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+        client.messages.create(
+            body=f"{message}\n{settings.TEXT_SIGNATURE}",
+            from_=settings.TWILIO_PHONE,
+            to=settings.CHRIS_PHONE)
+        logger.debug(f'Text sent to {settings.CHRIS_PHONE}.')
 
 
 SERVICES = {
