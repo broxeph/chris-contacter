@@ -14,6 +14,7 @@ Stack
 
 - Python 3.6 (Celery 4.2 isn't compatible with Python 3.7 due to use of `async` keyword)
 - Docker
+- Redis
 - Postgres
 - Django
 - Bootstrap 4
